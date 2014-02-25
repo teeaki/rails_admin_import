@@ -54,6 +54,7 @@ module RailsAdminImport
       end 
   
       def run_import(params)
+        logger = Logger.new("#{Rails.root}/log/import/import.log")
         begin
           if !params.has_key?(:file)
             return results = { :success => [], :error => ["You must select a file."] }
@@ -61,7 +62,6 @@ module RailsAdminImport
 
           if RailsAdminImport.config.logging
             FileUtils.copy(params[:file].tempfile, "#{Rails.root}/log/import/#{Time.now.strftime("%Y-%m-%d-%H-%M-%S")}-import.csv")
-            logger = Logger.new("#{Rails.root}/log/import/import.log")
           end
 
           text = File.read(params[:file].tempfile)
