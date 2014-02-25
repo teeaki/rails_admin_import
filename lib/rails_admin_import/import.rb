@@ -30,7 +30,7 @@ module RailsAdminImport
         end
  
         excluded_fields = RailsAdminImport.config(self).excluded_fields 
-        [:id, :created_at, :updated_at, excluded_fields].flatten.each do |key|
+        [:created_at, :updated_at, excluded_fields].flatten.each do |key|
           fields.delete(key)
         end
   
