@@ -64,8 +64,11 @@ module RailsAdminImport
             FileUtils.copy(params[:file].tempfile, "#{Rails.root}/log/import/#{Time.now.strftime("%Y-%m-%d-%H-%M-%S")}-import.csv")
           end
 
-          text = File.read(params[:file].tempfile)
-          clean = (text.encode('UTF-8', :undef => :replace, :replace => '') rescue text.encode('Shift_JIS', :undef => :replace, :replace => '')).gsub(/\n$/, '')
+          begin
+            clean = File.read(params[:file].tempfile).encode('UTF-8', :undef => :replace, :replace => '').gsub(/\n$/, '')
+          rescue
+            clean = File.read(params[:file].tempfile, 'r:Shift_JIS:UTF-8').encode('UTF-8', :undef => :replace, :replace => '').gsub(/\n$/, '')
+          end
           file_check = CSV.new(clean)
 
           if file_check.readlines.size > RailsAdminImport.config.line_item_limit
